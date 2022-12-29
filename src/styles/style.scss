@@ -1,3 +1,96 @@
-h1{
-    color: red;
+@import url('https://fonts.googleapis.com/css2?family=Prosto+One&family=Source+Sans+Pro&display=swap');
+$page-margin: 20px;
+
+
+*{
+    box-sizing: border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6{
+    margin: 0;
+    font-family: 'Prosto One', cursive;
+}
+
+body{
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    display: grid;
+    grid-template: auto 1fr auto / auto 5fr
+
+}
+
+header{
+    grid-column: 1 / -1;
+    background-color: #333;
+    padding: $page-margin;
+    display: grid;
+    align-content: center;
+    gap: $page-margin;
+    color: white;
+
+}
+
+nav{
+    width: 250px;
+    background-color: #ddd;
+    padding: $page-margin;
+
+    #default-projects{
+        display: grid;
+        gap: $page-margin;
+    }
+
+    #user-projects{
+        margin-top: $page-margin;
+        display: grid;
+        gap: $page-margin;
+    }
+}
+
+button{
+    display: flex;
+    align-items: center;
+    border-radius: .5rem;
+    border: none;
+    font-size: 1rem;
+
+    .material-symbols-outlined{
+        margin: 5px;
+    }
+
+}
+
+button:hover{
+    background-color: #333;
+    color: white;
+}
+
+#container{
+    margin: 20px 20%;
+
+    h2{
+        margin-bottom: $page-margin;
+    }
+
+    button{
+        width: 100%;
+    }
+}
+
+
+
+footer{
+    grid-column: 1 / -1;
+    background-color: #333;
+    color: white;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    #motto{
+        font-style: oblique;
+    }
 }

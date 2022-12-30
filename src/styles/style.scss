@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Prosto+One&family=Source+Sans+Pro&display=swap');
+
 $page-margin: 20px;
+$color-main: #333;
+$color-second: #ddd;
+$color-third: #464eb9;
+
+
+@mixin boxes-style{
+    border-radius: .5rem;
+    border: none;
+}
 
 
 *{
@@ -12,6 +22,7 @@ h1, h2, h3, h4, h5, h6{
     font-family: 'Prosto One', cursive;
 }
 
+
 body{
     height: 100vh;
     width: 100vw;
@@ -21,9 +32,13 @@ body{
 
 }
 
+.hidden{
+    display: none;
+}
+
 header{
     grid-column: 1 / -1;
-    background-color: #333;
+    background-color: $color-main;
     padding: $page-margin;
     display: grid;
     align-content: center;
@@ -34,7 +49,7 @@ header{
 
 nav{
     width: 250px;
-    background-color: #ddd;
+    background-color: $color-second;
     padding: $page-margin;
 
     #default-projects{
@@ -43,8 +58,8 @@ nav{
     }
 
     #user-projects{
-        margin-top: $page-margin;
         display: grid;
+        margin-top: $page-margin;
         gap: $page-margin;
     }
 }
@@ -63,7 +78,8 @@ button{
 }
 
 button:hover{
-    background-color: #333;
+    transition: background-color .5s, color .5s;
+    background-color: $color-main;
     color: white;
 }
 
@@ -79,11 +95,62 @@ button:hover{
     }
 }
 
+#task-add-form{
+    height: 300px;
+    @include boxes-style();
+    background-color: $color-second;
+    padding: $page-margin;
+    display: grid;
+    grid-template: 20% auto auto 20% / 3fr 1fr;
+    gap: $page-margin;
+
+    input,
+    textarea,
+    select{
+        @include boxes-style();
+        padding: 10px;
+    }
+
+    input#task-name{
+        grid-column: 1 / -1;
+    }
+    
+    textarea#task-description{
+        grid-row: 2 / 4;
+        resize: none;
+    }
+
+    ::placeholder,
+    input#task-date,
+    select{
+        color: $color-main;
+    }
+
+    button#task-submit{
+        grid-column: 1 / -1;
+        width: 80%;
+        justify-content: center;
+        justify-self: center;
+        background-color: #333;
+        color: white;
+        transition: background-color .5s, font-size .5s;
+
+
+    }
+    #task-submit:hover{
+        transition: background-color .5s, font-size .5s;
+        background-color: green;
+        font-size: 1.2rem;
+    }
+    
+
+}
+
 
 
 footer{
     grid-column: 1 / -1;
-    background-color: #333;
+    background-color: $color-main;
     color: white;
     height: 40px;
     display: flex;

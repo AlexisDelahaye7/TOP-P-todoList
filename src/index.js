@@ -1,5 +1,3 @@
 import './styles/style.scss'
-import listenForEvents from './modules/UI'
-import './modules/storage'
-
-listenForEvents()
+import './modules/Storage'
+import './modules/UI'

@@ -32,6 +32,19 @@ const checkLocalStorageAvailability = (function(){
     }
 })()
 
+const tasksList = [
+    [
+        'All Tasks',
+        ['Task One', 'description', 'date', 'priority', 'status'],
+        ['Task Two', 'description', 'date', 'priority', 'status']
+    ],
+    [
+        'Custom project',
+        ['Task One', 'description', 'date', 'priority', 'status'],
+        ['Task Two', 'description', 'date', 'priority', 'status']
+    ],
+]
+
 
 /*
 window.addEventListener('load', () => {
@@ -40,3 +53,5 @@ window.addEventListener('load', () => {
 
 })
 */
+
+export default tasksList

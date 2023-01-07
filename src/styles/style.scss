@@ -22,6 +22,10 @@ h1, h2, h3, h4, h5, h6{
     font-family: 'Prosto One', cursive;
 }
 
+.error{
+    transition: border-color .5s;
+    border: 2px solid red !important;
+}
 
 body{
     height: 100vh;
@@ -92,6 +96,32 @@ button:hover{
 
     button{
         width: 100%;
+    }
+}
+
+#container-content{
+    display: grid;
+    width: 100%;
+    margin-top: $page-margin;
+    gap: $page-margin;
+
+    div{
+        @include boxes-style;
+        background-color: $color-second;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+
+        input{
+            margin: 10px;
+        }
+    }
+
+    div:hover{
+        transition: background-color .5s, color .5s;
+        background-color: $color-main;
+        color: white;
     }
 }
 

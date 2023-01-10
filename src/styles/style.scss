@@ -37,7 +37,7 @@ body{
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }
 
 header{
@@ -125,6 +125,10 @@ button:hover{
     }
 }
 
+button#task-add{
+    border: 2px solid $color-main;
+}
+
 #task-add-form{
     height: 300px;
     @include boxes-style();
@@ -156,7 +160,7 @@ button:hover{
         color: $color-main;
     }
 
-    button#task-submit{
+    button#form-submit{
         grid-column: 1 / -1;
         width: 80%;
         justify-content: center;
@@ -167,7 +171,7 @@ button:hover{
 
 
     }
-    #task-submit:hover{
+    #form-submit:hover{
         transition: background-color .5s, font-size .5s;
         background-color: green;
         font-size: 1.2rem;

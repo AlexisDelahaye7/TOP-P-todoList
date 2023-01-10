@@ -1,156 +1,123 @@
-import Task from "./Task"
-import { storeTask, retrieveTasks } from "./Task"
-import tasksList from "./Storage"
+import { project } from './Project'
+import { tasksList, getLocalStorage, setLocalStorage } from './Storage'
+import { storeTask } from './Tasks'
 
-
-
-let currentProject = 'All Tasks'
-
-const loadTasksOnUI = function(){
-    const container = document.querySelector('#container-content')
-    let projectTasksList = retrieveTasks(currentProject)
-
-    for(let i = 1; i <= projectTasksList.length; i++){
-        const div = document.createElement('div')
-        div.classList.add('task')
-        const checkbox = document.createElement('input')
-        checkbox.setAttribute('type', 'checkbox')
-        const span = document.createElement('span')
-        span.textContent = projectTasksList[i][0]
-
-        div.appendChild(checkbox)
-        div.appendChild(span)
-        container.appendChild(div)
-        console.log(projectTasksList[i])
-    }
-}
-
-const appendTask = function(){
-    
-}
-
-window.addEventListener('load', loadTasksOnUI)
+let currentProject = 'Homepage'
+const taskForm = addTaskForm()
+const taskAddButton = document.querySelector('#task-add')
 
 const listenForEvents = (function(){
-    document.querySelector('#tasks-add').addEventListener('click', taskAddEvent)
-    document.querySelector('#tasks-all').addEventListener('click', taskAllEvent)
-    document.querySelector('#tasks-today').addEventListener('click', taskTodayEvent)
-    document.querySelector('#tasks-week').addEventListener('click', taskWeekEvent)
+    window.addEventListener('load', loadAllTasksOnUI)
+    taskAddButton.addEventListener('click', taskAddEvent)
+    document.querySelector('#project-homepage').addEventListener('click', homepageEvent)
     document.querySelector('#project-add').addEventListener('click', projectAddEvent)
+    const submitButton = document.querySelector('#form-submit').addEventListener('click', taskForm.submit)
 
     function taskAddEvent(){
         taskForm.show()
     }
     
-    function taskAllEvent(){
-    }
-
-    function taskTodayEvent(){
-    }
-
-    function taskWeekEvent(){
+    function homepageEvent(){
     }
 
     function projectAddEvent(){
     }
 })()
 
-const addTaskForm = function() {
+
+
+
+function addTaskForm(){
     const formTitle = document.querySelector('#container > h2')
-    const taskAddButton = document.querySelector('#tasks-add')
+    const taskAddButton = document.querySelector('#task-add')
+    const formElement = document.querySelector('form')
+
 
     const methods = {
         show: function(){
             formTitle.textContent = 'All tasks : Add a new one'
-            
-            taskAddButton.setAttribute('class', 'hidden')
-            
-            const taskAddForm = document.createElement('form')
-            taskAddForm.setAttribute('id', 'task-add-form')
-            taskAddButton.after(taskAddForm)
-            
-            const inputName = document.createElement('input')
-            inputName.setAttribute('type', 'text')
-            inputName.setAttribute('id', 'task-name')
-            inputName.setAttribute('placeholder', 'Your new task...')
-            taskAddForm.appendChild(inputName)
-            
-            const textareaDescription = document.createElement('textarea')
-            textareaDescription.setAttribute('id', 'task-description')
-            textareaDescription.setAttribute('placeholder', 'Description...')
-            taskAddForm.appendChild(textareaDescription)
-            
-            const inputDate = document.createElement('input')
-            inputDate.setAttribute('type', 'date')
-            inputDate.setAttribute('id', 'task-date')
-            taskAddForm.appendChild(inputDate)
-            
-            const selectPriority = document.createElement('select')
-            selectPriority.setAttribute('name', 'task-priority')
-            
-            const optionHead = document.createElement('option')
-            optionHead.setAttribute('value', '')
-            optionHead.setAttribute('disabled', '')
-            optionHead.setAttribute('selected', '')
-            optionHead.textContent = '-- Priority --'
-            
-            const optionLow = document.createElement('option')
-            optionLow.setAttribute('value', 'Low')
-            optionLow.textContent = 'Low'
-            
-            const optionNormal = document.createElement('option')
-            optionNormal.setAttribute('value', 'Normal')
-            optionNormal.textContent = 'Normal'
-            
-            const optionHigh = document.createElement('option')
-            optionHigh.setAttribute('value', 'High')
-            optionHigh.textContent = 'High'
-            
-            taskAddForm.appendChild(selectPriority)
-            selectPriority.appendChild(optionHead)
-            selectPriority.appendChild(optionLow)
-            selectPriority.appendChild(optionNormal)
-            selectPriority.appendChild(optionHigh)
-            
-            const submitButton = document.createElement('button')
-            submitButton.textContent = 'Create new task'
-            submitButton.setAttribute('id', 'task-submit')
-            submitButton.addEventListener('click', submit)
-            taskAddForm.appendChild(submitButton)
+            formElement.classList.remove('hidden')
+            taskAddButton.classList.add('hidden')
         },
         hide: function(){
             formTitle.textContent = 'All tasks'
-            taskAddButton.removeAttribute('class', 'hidden')
-            const taskAddForm = document.querySelector('form')
-            taskAddForm.remove()
+            formElement.classList.add('hidden')
+            taskAddButton.classList.remove('hidden')
+            taskForm.clear()
         },
-        error: function(element){                           //export error to an external module ?
+        error: function(element){
             return element.classList.add('error')
+        },        
+        submit: function(event){
+            event.preventDefault()
+            
+            const form = document.getElementById('task-add-form')
+            const name = document.getElementById('task-name')                           //not using .value to reuse the element constant for class modification
+            const description = document.getElementById('task-description').value
+            const date = document.getElementById('task-date').value
+            let priority = document.querySelector('[name="task-priority"]').value
+            
+            if (!name.value) return methods.error(name)
+            if (!priority) priority = 'Normal'
+        
+            let currentTask = [name.value, description, date, priority, false]
+        
+            storeTask(currentProject, currentTask)
+            let currentProjectIndex = project().getIndex(currentProject)
+            loadUniqueTaskOnUI(currentTask)
+            //tasksList[currentProjectIndex][tasksList[currentProjectIndex].length-1][0]        is new task name access
+            taskForm.hide()
+        },
+        clear: function(){
+            document.querySelectorAll('form input, form textarea')
+                    .forEach(e => {
+                        e.value = ''
+                        e.classList.remove('error')
+                    })
+            document.querySelector('form select')
+                    .selectedIndex = 0
         }
-    }
-    
-    const submit = function(event){
-
-        event.preventDefault();
-        const form = document.getElementById('task-add-form')
-        const name = document.getElementById('task-name')                           //not using .value to reuse the element constant for class modification
-        const description = document.getElementById('task-description').value
-        const date = document.getElementById('task-date').value
-        let priority = document.querySelector('[name="task-priority"]').value
-        
-        if (!name.value) return methods.error(name)
-        if (!priority) priority = 'Normal'
-        
-        let currentTask = new Task(name.value, description, date, priority, false)
-        let currentProject = "All Tasks"                                           //hard coding here for now. Later, we'll use the var depending on the current openned project
-        
-        storeTask(currentProject, currentTask)
-        methods.hide()
     }
 
     return methods
 }
 
-const taskForm = addTaskForm()
+function loadUniqueTaskOnUI(task){
+    const container = document.querySelector('#container-content')
+    const uniqueTaskName = task[0]
 
-export default {taskForm, listenForEvents}
+    const div = document.createElement('div')
+    div.addEventListener('click', () => {console.log('clicked')})
+    div.classList.add('task')
+    const checkbox = document.createElement('input')
+    checkbox.setAttribute('type', 'checkbox')
+    const span = document.createElement('span')
+    span.textContent = task[0]
+
+    div.appendChild(checkbox)
+    div.appendChild(span)
+    container.appendChild(div)
+}
+
+function loadAllTasksOnUI(){
+    if(!getLocalStorage()){
+        setLocalStorage
+    }
+    let thisProjectTasks = []
+
+    for(let i = 0; i < tasksList.length; i++){
+        if(tasksList[i][0] == currentProject){
+            thisProjectTasks = tasksList[i]
+        }
+    }
+    for(let i = 1; i < thisProjectTasks.length; i++){
+        loadUniqueTaskOnUI(thisProjectTasks[i])             //still issue with loading for than 2 tasks
+    }
+
+}
+
+
+export {
+    listenForEvents,
+    taskForm
+}

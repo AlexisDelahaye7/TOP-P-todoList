@@ -1,5 +1,5 @@
-- save to local storage
-- reload page content on storage update
+- save to local storage (done)
+- reload page content on storage update (next to do)
 
 Extras
 - Save to cloud ?

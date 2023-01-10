@@ -5,13 +5,14 @@ import { storeTask } from './Tasks'
 let currentProject = 'Homepage'
 const taskForm = addTaskForm()
 const taskAddButton = document.querySelector('#task-add')
+const submitButton = document.querySelector('#form-submit')
 
 const listenForEvents = (function(){
     window.addEventListener('load', loadAllTasksOnUI)
     taskAddButton.addEventListener('click', taskAddEvent)
     document.querySelector('#project-homepage').addEventListener('click', homepageEvent)
     document.querySelector('#project-add').addEventListener('click', projectAddEvent)
-    const submitButton = document.querySelector('#form-submit').addEventListener('click', taskForm.submit)
+    submitButton.addEventListener('click', taskForm.submit)
 
     function taskAddEvent(){
         taskForm.show()
@@ -100,9 +101,7 @@ function loadUniqueTaskOnUI(task){
 }
 
 function loadAllTasksOnUI(){
-    if(!getLocalStorage()){
-        setLocalStorage
-    }
+    getLocalStorage()
     let thisProjectTasks = []
 
     for(let i = 0; i < tasksList.length; i++){

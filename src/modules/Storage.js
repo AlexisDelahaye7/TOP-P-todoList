@@ -1,8 +1,9 @@
-const tasksList = [
+let tasksList = [
     [
         'Homepage',
         ['Task One homepage', 'description', 'date', 'priority', 'status'],
-        ['Task Two homepage', 'description', 'date', 'priority', 'status']
+        ['Task Two homepage', 'description', 'date', 'priority', 'status'],
+        ['Task Three homepage', 'description', 'date', 'priority', 'status']
     ],
     [
         'Custom project',
@@ -12,12 +13,15 @@ const tasksList = [
 ]
 
 function setLocalStorage(){
-    window.localStorage.setItem('tasks', JSON.stringify(tasksList))
+    return window.localStorage.setItem('tasks', JSON.stringify(tasksList))
 }
 
 function getLocalStorage(){
-    return JSON.parse(window.localStorage.getItem('tasks'))
+    if(JSON.parse(window.localStorage.getItem('tasks')) == null){
+        setLocalStorage
+    } else {
+        tasksList = JSON.parse(window.localStorage.getItem('tasks'))
+    }
 }
-
 
 export {tasksList, setLocalStorage, getLocalStorage}

@@ -1,6 +1,6 @@
 import { project } from './Project'
 import { tasksList, getLocalStorage, setLocalStorage } from './Storage'
-import { storeTask } from './Tasks'
+import { storeTask, showTaskContent, getCurrentProjectTasks, toggleTaskStatus, removeTask } from './Tasks'
 
 let currentProject = 'Homepage'
 const taskForm = addTaskForm()
@@ -9,14 +9,11 @@ const submitButton = document.querySelector('#form-submit')
 
 const listenForEvents = (function(){
     window.addEventListener('load', loadAllTasksOnUI)
-    taskAddButton.addEventListener('click', taskAddEvent)
+    taskAddButton.addEventListener('click', taskForm.show)
     document.querySelector('#project-homepage').addEventListener('click', homepageEvent)
     document.querySelector('#project-add').addEventListener('click', projectAddEvent)
     submitButton.addEventListener('click', taskForm.submit)
-
-    function taskAddEvent(){
-        taskForm.show()
-    }
+    document.querySelector('#task-add-form > .cancel').addEventListener('click', taskForm.hide)
     
     function homepageEvent(){
     }
@@ -88,35 +85,61 @@ function loadUniqueTaskOnUI(task){
     const uniqueTaskName = task[0]
 
     const div = document.createElement('div')
-    div.addEventListener('click', () => {console.log('clicked')})
+    div.addEventListener('click', showTaskContent, {useCapture: true})
     div.classList.add('task')
+
+    const checkboxStyle = document.createElement('div')
+    checkboxStyle.classList.add('checkbox-style')
+    
     const checkbox = document.createElement('input')
+    checkbox.addEventListener('change', toggleTaskStatus)      //todo later
     checkbox.setAttribute('type', 'checkbox')
     const span = document.createElement('span')
+    span.classList.add('task-name')
     span.textContent = task[0]
+    const deleteIcon = document.createElement('span')
+    deleteIcon.addEventListener('click', removeTask)
+    deleteIcon.classList.add('material-symbols-outlined')
+    deleteIcon.classList.add('delete')
+    deleteIcon.textContent = 'delete'
 
+    div.appendChild(checkboxStyle)
     div.appendChild(checkbox)
     div.appendChild(span)
+    div.appendChild(deleteIcon)
     container.appendChild(div)
 }
 
 function loadAllTasksOnUI(){
     getLocalStorage()
-    let thisProjectTasks = []
+    let thisProjectTasks = getCurrentProjectTasks()
 
-    for(let i = 0; i < tasksList.length; i++){
-        if(tasksList[i][0] == currentProject){
-            thisProjectTasks = tasksList[i]
-        }
-    }
     for(let i = 1; i < thisProjectTasks.length; i++){
-        loadUniqueTaskOnUI(thisProjectTasks[i])             //still issue with loading for than 2 tasks
+        loadUniqueTaskOnUI(thisProjectTasks[i])
     }
 
+}
+
+function expandTaskContent(event){
+    event.currentTarget.classList.toggle('opened')
+}
+
+function retractAllTasks(event){
+    document.querySelectorAll('.task')
+            .forEach(removeOpenedClass)
+    function removeOpenedClass(element){
+        if(element == event.currentTarget){
+            return
+        }
+        element.classList.remove('opened')
+    }
 }
 
 
 export {
     listenForEvents,
-    taskForm
+    taskForm,
+    currentProject,
+    expandTaskContent,
+    retractAllTasks
 }

@@ -105,17 +105,73 @@ button:hover{
     margin-top: $page-margin;
     gap: $page-margin;
 
-    div{
+    .task:hover{
+        .checkbox-style{
+            border: 2px solid $color-second;
+            background-color: $color-main;
+        }
+    }
+
+    .task{
+        transition: height .5s,
+                    padding .5s,
+                    align-items .5s
+                    !important;
+        height: 35px;
         @include boxes-style;
         background-color: $color-second;
-        height: 35px;
         display: flex;
         align-items: center;
         padding: 5px;
 
+        .checkbox-style{
+            background-color: none;
+            height: 15px;
+            width: 15px;
+            position: absolute;
+            margin: 9px;
+            border: 2px solid $color-main;
+            border-radius: 50%;
+            
+        }
+
+        .checkbox-style.checked{
+            background-color: green;
+        }
+
         input{
             margin: 10px;
+            opacity: 0;
         }
+
+        span{
+            user-select: none;
+        }
+
+        .delete{
+            transition: color .5s;
+            color: $color-second;
+            justify-self: flex-end;
+            margin-left: auto;
+            cursor: pointer;
+        }
+        .delete:hover{
+            transition: color .5s;
+            color: red;
+        }
+    }
+
+    .task.opened{
+        transition: height .5s,
+                    padding .5s,
+                    align-items .5s
+                    !important;
+        height: 400px;
+        background-color: #333;
+        color: $color-second;
+        display: flex;
+        align-items: flex-start;
+        padding: $page-margin;
     }
 
     div:hover{
@@ -123,6 +179,7 @@ button:hover{
         background-color: $color-main;
         color: white;
     }
+    
 }
 
 button#task-add{
@@ -137,6 +194,23 @@ button#task-add{
     display: grid;
     grid-template: 20% auto auto 20% / 3fr 1fr;
     gap: $page-margin;
+    position: relative;
+
+    .cancel{
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        color: red;
+        background-color: $color-second;
+        border-radius: 50%;
+        user-select: none;
+        cursor: pointer;
+    }
+
+    .cancel:hover{
+        transition: transform .5s;
+        transform: rotate(360deg)
+    }
 
     input,
     textarea,
